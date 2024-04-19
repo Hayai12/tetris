@@ -1,16 +1,22 @@
 import './index.css'
 import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH, PIECES } from './const'
 
-const canvas = document.querySelector('canvas')
+const canvas = document.getElementById('gameCanvas')
 const context = canvas.getContext('2d')
+const nextPieceCanvas = document.getElementById('nextPieceCanvas')
+const nextPieceContext = nextPieceCanvas.getContext('2d')
+nextPieceContext.clearRect(0, 0, nextPieceCanvas.width, nextPieceCanvas.height);
 const $score = document.querySelector('span')
+const buttonPause = document.querySelector('button')
 
 let score = 0
+let isPaused = false
 
 canvas.width = BLOCK_SIZE * BOARD_WIDTH
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT
 
 context.scale(BLOCK_SIZE, BLOCK_SIZE)
+nextPieceContext.scale(20,20)
 
 const board = Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(0))
 
@@ -22,10 +28,20 @@ const piece = {
   ]
 }
 
+const nextPiece = {
+  shape: null // Inicialmente la siguiente pieza no tiene forma
+};
+
 let dropCounter = 0
 let lastTime = 0
 
+initNextPiece(); 
+
 function update (time = 0) {
+  if(isPaused){
+    window.requestAnimationFrame(update)
+    return
+  }
   const deltaTime = time - lastTime
   lastTime = time
   dropCounter += deltaTime
@@ -45,6 +61,7 @@ function update (time = 0) {
 }
 
 function draw () {
+  
   context.fillStyle = '#000'
   context.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -62,11 +79,26 @@ function draw () {
       if (value) {
         context.fillStyle = 'red'
         context.fillRect(x + piece.position.x, y + piece.position.y, 1, 1)
+       
       }
     })
   })
+
+  nextPiece.shape.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value) {
+        nextPieceContext.fillStyle = 'blue';
+        nextPieceContext.fillRect(x, y, 1, 1);
+      }
+    });
+  });
   $score.innerText = score
 }
+
+function initNextPiece() {
+  nextPiece.shape = PIECES[Math.floor(Math.random() * PIECES.length)];
+}
+
 
 document.addEventListener('keydown', event => {
   if (event.key === 'ArrowLeft') {
@@ -133,6 +165,7 @@ function solidifyPiece () {
     window.alert('Game Over')
     board.forEach((row) => row.fill(0))
   }
+  initNextPiece(); 
 }
 
 function removeRows () {
@@ -151,5 +184,12 @@ function removeRows () {
     score += 10
   })
 }
+
+
+
+
+buttonPause.addEventListener('click', () => {
+  isPaused = !isPaused
+})
 
 update()
