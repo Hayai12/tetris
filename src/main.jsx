@@ -5,7 +5,7 @@ const canvas = document.getElementById('gameCanvas')
 const context = canvas.getContext('2d')
 const nextPieceCanvas = document.getElementById('nextPieceCanvas')
 const nextPieceContext = nextPieceCanvas.getContext('2d')
-nextPieceContext.clearRect(0, 0, nextPieceCanvas.width, nextPieceCanvas.height);
+nextPieceContext.clearRect(0, 0, nextPieceCanvas.width, nextPieceCanvas.height)
 const $score = document.querySelector('span')
 const buttonPause = document.querySelector('button')
 
@@ -16,7 +16,7 @@ canvas.width = BLOCK_SIZE * BOARD_WIDTH
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT
 
 context.scale(BLOCK_SIZE, BLOCK_SIZE)
-nextPieceContext.scale(20,20)
+nextPieceContext.scale(20, 20)
 
 const board = Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(0))
 
@@ -27,18 +27,31 @@ const piece = {
     [1, 1]
   ]
 }
-
 const nextPiece = {
-  shape: null // Inicialmente la siguiente pieza no tiene forma
-};
+  shape: [
+    [1, 1],
+    [1, 1]
+  ]
+}
 
 let dropCounter = 0
 let lastTime = 0
 
-initNextPiece(); 
+function selectNewShape () {
+  nextPiece.shape = PIECES[Math.floor(Math.random() * PIECES.length)]
+  nextPieceContext.clearRect(0, 0, nextPieceCanvas.width, nextPieceCanvas.height)
+  nextPiece.shape.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value) {
+        nextPieceContext.fillStyle = 'red'
+        nextPieceContext.fillRect(x, y, 1, 1)
+      }
+    })
+  })
+}
 
 function update (time = 0) {
-  if(isPaused){
+  if (isPaused) {
     window.requestAnimationFrame(update)
     return
   }
@@ -55,13 +68,12 @@ function update (time = 0) {
       removeRows()
     }
   }
-
   draw()
+
   window.requestAnimationFrame(update)
 }
 
 function draw () {
-  
   context.fillStyle = '#000'
   context.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -79,26 +91,12 @@ function draw () {
       if (value) {
         context.fillStyle = 'red'
         context.fillRect(x + piece.position.x, y + piece.position.y, 1, 1)
-       
       }
     })
   })
 
-  nextPiece.shape.forEach((row, y) => {
-    row.forEach((value, x) => {
-      if (value) {
-        nextPieceContext.fillStyle = 'blue';
-        nextPieceContext.fillRect(x, y, 1, 1);
-      }
-    });
-  });
   $score.innerText = score
 }
-
-function initNextPiece() {
-  nextPiece.shape = PIECES[Math.floor(Math.random() * PIECES.length)];
-}
-
 
 document.addEventListener('keydown', event => {
   if (event.key === 'ArrowLeft') {
@@ -159,13 +157,13 @@ function solidifyPiece () {
   })
   piece.position.x = Math.floor(BOARD_WIDTH / 2 - 2)
   piece.position.y = 0
-  piece.shape = PIECES[Math.floor(Math.random() * PIECES.length)]
+  piece.shape = nextPiece.shape
+  selectNewShape()
 
   if (checkCollision()) {
     window.alert('Game Over')
     board.forEach((row) => row.fill(0))
   }
-  initNextPiece(); 
 }
 
 function removeRows () {
@@ -184,9 +182,6 @@ function removeRows () {
     score += 10
   })
 }
-
-
-
 
 buttonPause.addEventListener('click', () => {
   isPaused = !isPaused
