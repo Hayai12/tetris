@@ -7,17 +7,32 @@
     <title>Vite + React</title>
   </head>
   <body>
+    
+    <div id="start-screen">
+      <h1>Welcome to Tetris</h1>
+      <button id="play-button">Play</button>
+    </div>
+    <div id="overlay">
+      <div id="game-over-screen" style="display: none;">
+        <h2>Game Over</h2>
+        <p>Final Score: <span id="final-score"></span></p>
+        <button id="restart-button">Restart</button>
+      </div>
+    </div>
+    
+
     <div id="game-container">
 
 
     <div class="columns">
       <div class="score-container">
         <h2>Score</h2>
-        <span></span>
+        <span id="score-span"></span>
       </div>
       
       
-      <button>Pause game</button>
+      <button id="pause-button">Pause game</button>
+      <button id="restart-button-game">Restart game</button>
 
     </div>
     <div class="columns">
@@ -25,9 +40,10 @@
     </div>
     <div  class="columns">
         <h2>Next Piece</h2>
-        <canvas width="100" height="100" id="nextPieceCanvas"></canvas>
+        <canvas class="nextPiece" width="150" height="150" id="nextPieceCanvas"></canvas>
   </div>
 </div>
+
     
     <script type="module" src="/src/main.jsx"></script>
   </body>

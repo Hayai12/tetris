@@ -21,19 +21,105 @@ body,html{
   width: 100%;
 }
 
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Ajusta la opacidad según tu preferencia */
+  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+  display: none; /* Inicialmente oculto */
+}
+
+#start-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semi-transparente */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Asegura que esté sobre el juego */
+  visibility: visible; /* Se mostrará por defecto */
+}
+
+#start-screen h1 {
+  color: #fff; /* Color del texto */
+}
+
+#play-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff5454; /* Color del botón */
+  color: #fff; /* Color del texto del botón */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#play-button:hover {
+  background-color: #ff3333; /* Cambio de color al pasar el mouse */
+}
+
+#game-over-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+}
+
+#game-over-screen h2 {
+  margin-top: 0;
+}
+
+#restart-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff5454;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#restart-button:hover {
+  background-color: #ff3333;
+}
 #game-container {
   display: flex;
   justify-content: space-evenly;
   align-items: flex-start;
   height: 60%;
   width: 60%;
+  gap: 50px;
 }
 
 .columns {
   display: flex;
   flex-direction: column; /* Los elementos dentro de cada columna se apilan verticalmente */
   align-items: center; /* Alinea los elementos en el borde superior de cada columna */
+  justify-content: flex-start;
+  gap: 20px;
 }
+
+.nextPiece{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
 
 .score-container{
   display: flex;
