@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const context = canvas.getContext('2d')
   const nextPieceCanvas = document.getElementById('nextPieceCanvas')
   const nextPieceContext = nextPieceCanvas.getContext('2d')
-  nextPieceContext.clearRect(0, 0, nextPieceCanvas.width, nextPieceCanvas.height)
   const $score = document.getElementById('score-span')
   const gameOverScreen = document.getElementById('game-over-screen')
   const finalScoreElement = document.getElementById('final-score')
@@ -61,34 +60,10 @@ document.addEventListener('DOMContentLoaded', function () {
         row.forEach((value, x) => {
           if (value) {
             nextPieceContext.fillStyle = 'red'
-            // Usar offset para centrar
             nextPieceContext.fillRect(x + offsetX, y + offsetY, 1, 1)
           }
         })
       })
-    }
-
-    function update (time = 0) {
-      if (isPaused) {
-        window.requestAnimationFrame(update)
-        return
-      }
-      const deltaTime = time - lastTime
-      lastTime = time
-      dropCounter += deltaTime
-
-      if (dropCounter > 500) {
-        piece.position.y++
-        dropCounter = 0
-        if (checkCollision()) {
-          piece.position.y--
-          solidifyPiece()
-          removeRows()
-        }
-      }
-      draw()
-
-      window.requestAnimationFrame(update)
     }
 
     function draw () {
@@ -114,6 +89,29 @@ document.addEventListener('DOMContentLoaded', function () {
       })
 
       $score.innerText = score
+    }
+
+    function update (time = 0) {
+      if (isPaused) {
+        window.requestAnimationFrame(update)
+        return
+      }
+      const deltaTime = time - lastTime
+      lastTime = time
+      dropCounter += deltaTime
+
+      if (dropCounter > 500) {
+        piece.position.y++
+        dropCounter = 0
+        if (checkCollision()) {
+          piece.position.y--
+          solidifyPiece()
+          removeRows()
+        }
+      }
+      draw()
+
+      window.requestAnimationFrame(update)
     }
 
     document.addEventListener('keydown', event => {
